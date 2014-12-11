@@ -48,7 +48,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CubeControl.cs" />
      <Compile Include="Assets\Scripts\GameConroller.cs" />
-     <Compile Include="Assets\Scripts\Rotator.cs" />
      <Compile Include="Assets\Scripts\winTextHandler.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>G:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>

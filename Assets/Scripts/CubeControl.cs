@@ -5,9 +5,33 @@ public class CubeControl : MonoBehaviour {
 	public Light cubeLight;
 	public bool isPlayer;
 	public bool availible = true;
+	GameConroller gameCon;
+
+	void Start()
+	{
+		gameCon = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameConroller>();
+	}
 
 	void Update ()
 	{
+		if (!availible)
+			transform.Rotate (new Vector3(0, 50, 0) * Time.deltaTime);
+	}
+
+	void OnMouseDown ()
+	{
+		if (gameCon.isGameOver) 
+			return;
+		if (gameCon != null && availible)
+		{
+			select(true);
+			if (gameCon.checkWinState())
+			{
+				gameCon.gameOver();
+				return;
+			}
+			gameCon.makeAIturn();
+		}
 	}
 
 	public Vector2 getCubePos ()
@@ -30,11 +54,11 @@ public class CubeControl : MonoBehaviour {
 		renderer.enabled = true;
 		availible = false;
 		isPlayer = player;
-		GameConroller gc = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameConroller> ();
 		if (isPlayer)
-			cubeLight.color = gc.playerColor;
+			cubeLight.color = gameCon.playerColor;
 		else
-			cubeLight.color = gc.AIcolor;
+			cubeLight.color = gameCon.AIcolor;
+		renderer.material.CopyPropertiesFromMaterial (gameCon.matList [(gameCon.isAIfirstMove && player || !gameCon.isAIfirstMove && !player) ? 1 : 0]);
 	}
 
 	public void reset ()

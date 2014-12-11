@@ -6,8 +6,10 @@ public class GameConroller : MonoBehaviour
 {
 	public Color playerColor;
 	public Color AIcolor;
-	bool isGameOver = false;
-	bool isAIfirstMove = false;
+	public bool isGameOver = false;
+	public Material[] matList;
+	public bool isAIfirstMove = false;
+	bool firstRun;
 
 	void Start ()
 	{
@@ -16,35 +18,16 @@ public class GameConroller : MonoBehaviour
 
 	void Update ()
 	{
-		if (isGameOver) 
+		if (isGameOver)
 			return;
-		if (isAIfirstMove)
+		if (firstRun && isAIfirstMove)
 		{
 			makeAIturn();
-			isAIfirstMove = false;
-		}
-		if (Input.GetMouseButtonDown(0))
-		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit) && hit.collider != null)
-			{
-				CubeControl cc = hit.collider.gameObject.GetComponent("CubeControl") as CubeControl;
-				if (cc != null && cc.availible)
-				{
-					cc.select(true);
-					if (checkWinState())
-					{
-						gameOver();
-						return;
-					}
-					makeAIturn();
-				}
-			}
+			firstRun = false;
 		}
 	}
 
-	void makeAIturn ()
+	public void makeAIturn ()
 	{
 		ArrayList cubeList;
 		getCubeList (true, out cubeList);
@@ -56,7 +39,7 @@ public class GameConroller : MonoBehaviour
 			gameOver();
 	}
 	
-	bool checkWinState ()
+	public bool checkWinState ()
 	{
 		ArrayList cubeList;
 		getCubeList (false, out cubeList);
@@ -163,16 +146,16 @@ public class GameConroller : MonoBehaviour
 		return false;
 	}
 
-	void gameOver()
+	public void gameOver()
 	{
 		isGameOver = true;
 		getMainWindow().enabled = true;
-		Toggle tgl = GameObject.FindGameObjectWithTag ("AIfirstMoveToggle").GetComponent<Toggle> ();
 		getAIfirstMoveToggle ().enabled = true;
 	}
 
 	public void restartGame()
 	{
+		firstRun = true;
 		getMainWindow ().enabled = false;
 		ArrayList cubeList;
 		getCubeList (false, out cubeList);
