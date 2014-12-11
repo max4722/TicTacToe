@@ -39,18 +39,42 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>G:/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>g:/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>G:/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>g:/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\GameJoltAPI\API\Core\GJAPI.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Methods Groups\GJDataMehods.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Methods Groups\GJScoresMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Methods Groups\GJSessionsMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Methods Groups\GJTrophiesMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Methods Groups\GJUsersMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Objects\GJObject.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Objects\GJScore.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Objects\GJTable.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Objects\GJTrophy.cs" />
+     <Compile Include="Assets\GameJoltAPI\API\Objects\GJUser.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Core\GJAPIHelper.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Core\GJHNotificationsManager.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Core\GJHWindowsManager.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Methods Groups\GJHScoresMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Methods Groups\GJHTrophiesMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Methods Groups\GJHUsersMethods.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Objects\GJHNotification.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Objects\GJHWindow.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Windows\GJHLoginWindow.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Windows\GJHScoresWindow.cs" />
+     <Compile Include="Assets\GameJoltAPI\Helper\Windows\GJHTrophiesWindow.cs" />
+     <Compile Include="Assets\GameJoltAPI\Libraries\MD5.cs" />
      <Compile Include="Assets\Scripts\CubeControl.cs" />
      <Compile Include="Assets\Scripts\GameConroller.cs" />
      <Compile Include="Assets\Scripts\winTextHandler.cs" />
+     <None Include="Assets\GameJoltAPI\README.txt" />
  <Reference Include="UnityEngine.UI">
- <HintPath>G:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
+ <HintPath>g:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
