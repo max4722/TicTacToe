@@ -14,6 +14,7 @@ public class GameConroller : MonoBehaviour
 	void Start ()
 	{
 		restartGame ();
+		audio.Play ();
 	}
 
 	void Update ()
