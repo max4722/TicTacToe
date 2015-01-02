@@ -1,0 +1,11 @@
+G:\Repos\TicTacToe\obj\Debug\UnityVS.TicTacToe.CSharp.csprojResolveAssemblyReference.cache
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEditor.dll
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEngine.dll
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEngine.xml
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEditor.xml
+G:\Repos\TicTacToe\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+G:\Repos\TicTacToe\obj\Debug\Assembly-CSharp.dll
+G:\Repos\TicTacToe\obj\Debug\Assembly-CSharp.pdb

@@ -1,126 +1,148 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
+// ReSharper disable once ClassNeverInstantiated.Global
+// ReSharper disable once CheckNamespace
 public class GameConroller : MonoBehaviour
 {
-	public Color playerColor;
+    // ReSharper disable once UnassignedField.Global
+	public Color PlayerColor;
+    // ReSharper disable once UnassignedField.Global
 	public Color AIcolor;
-	public bool isGameOver = false;
-	public Material[] matList;
-	public bool isAIfirstMove = false;
-	bool firstRun;
+	public bool IsGameOver;
+    // ReSharper disable once UnassignedField.Global
+	public Material[] MatList;
+	public bool IsAIfirstMove;
+	bool _firstRun;
 
+    // ReSharper disable once UnusedMember.Local
 	void Start ()
 	{
-		restartGame ();
+		RestartGame ();
 		audio.Play ();
 	}
 
+    // ReSharper disable once UnusedMember.Local
 	void Update ()
 	{
-		if (isGameOver)
+		if (IsGameOver)
 			return;
-		if (firstRun && isAIfirstMove)
-		{
-			makeAIturn();
-			firstRun = false;
-		}
+	    if (!_firstRun || !IsAIfirstMove) return;
+	    MakeAIturn();
+	    _firstRun = false;
 	}
 
-	public void makeAIturn ()
+	public void MakeAIturn ()
 	{
 		ArrayList cubeList;
-		getCubeList (true, out cubeList);
+		GetCubeList (true, out cubeList);
 		if (cubeList.Count == 0)
 			return;
-		CubeControl selectedCube = cubeList[Random.Range (0, cubeList.Count - 1)] as CubeControl;
-		selectedCube.select (false);
-		if (checkWinState ())
-			gameOver();
+		var selectedCube = cubeList[Random.Range (0, cubeList.Count - 1)] as CubeControl;
+	    if (selectedCube != null)
+            selectedCube.Select (false);
+	    if (CheckWinState ())
+			GameOver();
 	}
 	
-	public bool checkWinState ()
+	public bool CheckWinState ()
 	{
 		ArrayList cubeList;
-		getCubeList (false, out cubeList);
+		GetCubeList (false, out cubeList);
 		if (cubeList.Count == 0)
 			return false;
-		ArrayList playerCubes = new ArrayList ();
-		ArrayList AIcubes = new ArrayList ();
-		foreach (object go in cubeList)
+		var playerCubes = new ArrayList ();
+		var aiCubes = new ArrayList ();
+        /*
+        foreach (var go in cubeList)
+        {
+            var cube = go as CubeControl;
+            if (cube == null) continue;
+            var cc = cube.GetComponent("CubeControl") as CubeControl;
+            if (cc == null || cc.Availible) continue;
+            if (cc.IsPlayer)
+                playerCubes.Add(cc);
+            else
+                aiCubes.Add(cc);
+        }
+        */
+        foreach (
+	        var cc in
+	            cubeList.OfType<CubeControl>()
+	                .Select(cube => cube.GetComponent("CubeControl") as CubeControl)
+	                .Where(cc => cc != null && !cc.Availible))
 		{
-			CubeControl cube = go as CubeControl;
-			CubeControl cc = cube.GetComponent ("CubeControl") as CubeControl;
-			if (cc != null && !cc.availible)
-				if (cc.isPlayer)
-					playerCubes.Add(cc);
-				else
-					AIcubes.Add(cc);
+		    if (cc.IsPlayer)
+		        playerCubes.Add(cc);
+		    else
+		        aiCubes.Add(cc);
 		}
-		bool win = false;
-		if (checkCoins (playerCubes))
+		var win = false;
+		if (CheckCoins (playerCubes))
 		{
-			getResultText().text = "You Win!";
+			GetResultText().text = "You Win!";
 			win = true;
 		}
-		else if (checkCoins (AIcubes))
+		else if (CheckCoins (aiCubes))
 		{
-			getResultText().text = "You lose";
+			GetResultText().text = "You lose";
 			win = true;
 		}
-		else if (playerCubes.Count + AIcubes.Count == cubeList.Count)
+		else if (playerCubes.Count + aiCubes.Count == cubeList.Count)
 		{
-			getResultText().text = "Draw.";
-			gameOver ();
+			GetResultText().text = "Draw.";
+			GameOver ();
 		}
 		return win;
 	}
 
-	bool checkCoins(ArrayList cubsList)
+    static bool CheckCoins(IEnumerable cubsList)
 	{
-		int count = 0;
-		for (int row = -1; row <= 1; ++row)
+		int count;
+        const double tolerance = 0.1f;
+        var cubes = cubsList as IList<object> ?? cubsList.Cast<object>().ToList();
+        for (var row = -1; row <= 1; ++row)
 		{
 			count = 0;
-			for (int col = -1; col <= 1; ++col)
-				foreach (CubeControl cube in cubsList) 
+			for (var col = -1; col <= 1; ++col)
+				foreach (CubeControl cube in cubes) 
 				{
-					Vector2 pos = cube.getCubePos();
-					if (pos.x == col && pos.y == row)
+					var pos = cube.GetCubePos();
+					if (Math.Abs(pos.x - col) < tolerance && Math.Abs(pos.y - row) < tolerance)
 					++count;
 				}
-			if (count == 3)
-			{
-				Debug.Log("Row " + row + " win");
-				return true;
-			}
+		    if (count != 3) continue;
+		    Debug.Log("Row " + row + " win");
+		    return true;
 		}
-		for (int col = -1; col <= 1; ++col)
+		for (var col = -1; col <= 1; ++col)
 		{
 			count = 0;
-			for (int row = -1; row <= 1; ++row)
+			for (var row = -1; row <= 1; ++row)
 			{
-				foreach (CubeControl cube in cubsList)
+				foreach (CubeControl cube in cubes)
 				{
-					Vector2 pos = cube.getCubePos();
-					if (pos.x == col && pos.y == row)
+					var pos = cube.GetCubePos();
+					if (Math.Abs(pos.x - col) < tolerance && Math.Abs(pos.y - row) < tolerance)
 						++count;
 				}
 			}
-			if (count == 3)
-			{
-				Debug.Log("Col " + col + " win");
-				return true;
-			}
+		    if (count != 3) continue;
+		    Debug.Log("Col " + col + " win");
+		    return true;
 		}
 		count = 0;
-		for (int i = -1; i <= 1; ++i)
+		for (var i = -1; i <= 1; ++i)
 		{
-			foreach (CubeControl cube in cubsList)
+			foreach (CubeControl cube in cubes)
 			{
-				Vector2 pos = cube.getCubePos();
-				if (pos.x == i && pos.y == i)
+				var pos = cube.GetCubePos();
+				if (Math.Abs(pos.x - i) < tolerance && Math.Abs(pos.y - i) < tolerance)
 					++count;
 			}
 		}
@@ -130,74 +152,73 @@ public class GameConroller : MonoBehaviour
 			return true;
 		}
 		count = 0;
-		for (int i = -1; i <= 1; ++i)
+		for (var i = -1; i <= 1; ++i)
 		{
-			foreach (CubeControl cube in cubsList)
+			foreach (CubeControl cube in cubes)
 			{
-				Vector2 pos = cube.getCubePos();
-				if (pos.x == i && pos.y == -i)
+				var pos = cube.GetCubePos();
+				if (Math.Abs(pos.x - i) < tolerance && Math.Abs(pos.y - (-i)) < tolerance)
 					++count;
 			}
 		}
-		if (count == 3)
-		{
-			Debug.Log("\\ win");
-			return true;
-		}
-		return false;
+        if (count != 3) return false;
+        Debug.Log("\\ win");
+        return true;
 	}
 
-	public void gameOver()
+	public void GameOver()
 	{
-		isGameOver = true;
-		getMainWindow().enabled = true;
-		getAIfirstMoveToggle ().enabled = true;
+		IsGameOver = true;
+		GetMainWindow().enabled = true;
+		GetAIfirstMoveToggle ().enabled = true;
 	}
 
-	public void restartGame()
+    public void RestartGame()
 	{
-		firstRun = true;
-		getMainWindow ().enabled = false;
+		_firstRun = true;
+		GetMainWindow ().enabled = false;
 		ArrayList cubeList;
-		getCubeList (false, out cubeList);
+		GetCubeList (false, out cubeList);
 		foreach(CubeControl cube in cubeList)
-			cube.reset();
-		isGameOver = false;
-		isAIfirstMove = getAIfirstMoveToggle ().GetComponentInChildren<Toggle> ().isOn;
-		getAIfirstMoveToggle ().enabled = false;
+			cube.Reset();
+		IsGameOver = false;
+		IsAIfirstMove = GetAIfirstMoveToggle ().GetComponentInChildren<Toggle> ().isOn;
+		GetAIfirstMoveToggle ().enabled = false;
 	}
 
-	public Canvas getMainWindow()
+    private static Canvas GetMainWindow()
 	{
 		return GameObject.FindGameObjectWithTag ("MainWindow").GetComponent<Canvas>();
 	}
 
-	public Text getResultText()
+    private static Text GetResultText()
 	{
 		return GameObject.FindGameObjectWithTag ("ResultText").GetComponent<Text>();
 	}
 
-	public Canvas getAIfirstMoveToggle()
+    private static Canvas GetAIfirstMoveToggle()
 	{
 		return GameObject.FindGameObjectWithTag ("AIfirstMoveToggle").GetComponent<Canvas> ();
 	}
 
-	void getCubeList(bool onlyAvalible, out ArrayList cubeList)
+    private static void GetCubeList(bool onlyAvalible, out ArrayList cubeList)
 	{
 		cubeList = new ArrayList ();
-		GameObject[] cubes = GameObject.FindGameObjectsWithTag ("Cube");
+		var cubes = GameObject.FindGameObjectsWithTag ("Cube");
 		if (cubes.Length == 0)
 			return;
-		foreach (GameObject cube in cubes)
+	    foreach (
+	        var cc in
+	            cubes.Select(cube => cube.GetComponent("CubeControl") as CubeControl)
+	                .Where(cc => cc != null && (cc.Availible || !onlyAvalible))) 
 		{
-			CubeControl cc = cube.GetComponent("CubeControl") as CubeControl;
-			if (cc != null && (cc.availible || !onlyAvalible))
-				cubeList.Add(cc);
+		    cubeList.Add(cc);
 		}
 	}
 
-	public void setAIfirstMove(bool par)
+    // ReSharper disable once UnusedMember.Global
+	public void SetAIfirstMove(bool par)
 	{
-		isAIfirstMove = par;
+		IsAIfirstMove = par;
 	}
 }
