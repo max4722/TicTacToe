@@ -1,30 +1,28 @@
 ﻿using UnityEngine;
 
-// ReSharper disable once ClassNeverInstantiated.Global
-// ReSharper disable once CheckNamespace
 public class CubeControl : MonoBehaviour
 {
-    // ReSharper disable once UnassignedField.Global
-    // ReSharper disable once MemberCanBePrivate.Global
     public Light CubeLight;
     public bool IsPlayer;
-    public bool Availible = true;
+    private bool _availible = true;
+
+    public bool Availible
+    {
+        get { return _availible; }
+        set
+        {
+            GetComponent<Animator>().enabled = (value != _availible && !value);
+            _availible = value;
+        }
+    }
+
     private GameConroller _gameCon;
 
-    // ReSharper disable once UnusedMember.Local
     private void Start()
     {
         _gameCon = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameConroller>();
     }
 
-    // ReSharper disable once UnusedMember.Local
-    private void Update()
-    {
-        if (!Availible)
-            transform.Rotate(new Vector3(0, 50, 0)*Time.deltaTime);
-    }
-
-    // ReSharper disable once UnusedMember.Local
     private void OnMouseDown()
     {
         if (_gameCon.IsGameOver)
@@ -65,7 +63,6 @@ public class CubeControl : MonoBehaviour
             _gameCon.MatList[(_gameCon.IsAIfirstMove && player || !_gameCon.IsAIfirstMove && !player) ? 1 : 0]);
     }
 
-    // ReSharper disable once UnusedMember.Local
     public void Reset()
     {
         renderer.enabled = false;
