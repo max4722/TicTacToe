@@ -2,3 +2,5 @@ build
 Temp
 Library
 obj
+ProjectSettings/
+Assets/Scripts/**/*.meta

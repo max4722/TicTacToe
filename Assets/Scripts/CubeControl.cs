@@ -55,17 +55,17 @@ public class CubeControl : MonoBehaviour
 
     public void Select(bool player)
     {
-        renderer.enabled = true;
+        GetComponent<Renderer>().enabled = true;
         Availible = false;
         IsPlayer = player;
         CubeLight.color = IsPlayer ? _gameCon.PlayerColor : _gameCon.AIcolor;
-        renderer.material.CopyPropertiesFromMaterial(
+        GetComponent<Renderer>().material.CopyPropertiesFromMaterial(
             _gameCon.MatList[(_gameCon.IsAIfirstMove && player || !_gameCon.IsAIfirstMove && !player) ? 1 : 0]);
     }
 
     public void Reset()
     {
-        renderer.enabled = false;
+        GetComponent<Renderer>().enabled = false;
         Availible = true;
         CubeLight.color = Color.white;
     }

@@ -58,7 +58,7 @@ public class GameConroller : MonoBehaviour
 	private void Start ()
 	{
 		RestartGame ();
-		audio.Play ();
+		GetComponent<AudioSource>().Play ();
 	}
 
 	private void Update ()
